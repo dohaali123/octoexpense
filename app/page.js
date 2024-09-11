@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { sendEmail } from '../lib/sendEmail';
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -17,15 +17,12 @@ export default function Home() {
   const [success, setSuccess] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const router = useRouter(); 
-
-  // Fixed credentials for testing
-  const fixedEmail = 'test@example.com';
+  // Fixed password for testing
   const fixedPassword = 'password123';
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (email === fixedEmail && password === fixedPassword) {
+    if (password === fixedPassword) {
       setIsLoggedIn(true);
       setError('');
     } else {
@@ -35,45 +32,36 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (expenseType === 'Other' && !comment) {
+    if (expenseType === "Other" && !comment) {
       setError('Comment is required for "Other" Expense Type.');
-      return;
+      return; 
     }
 
-    const myHeaders = new Headers();
-    myHeaders.append("X-DRESDEN-TOKEN", "5454318306");
-    
-    const formdata = new FormData();
-    formdata.append('photo', photo);
-    formdata.append('country', country);
-    formdata.append('costCentre', costCentre);
-    formdata.append('expenseType', expenseType);
-    formdata.append('reimbursementNeeded', reimbursementNeeded);
-    formdata.append('comment', comment);
-  
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-      redirect: "follow"
-    };
-    
-    fetch("https://node.d.dresden.io/webhook/expense-form", requestOptions)
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .then(data => {
-        console.log('Success:', data);
-        setSuccess('Form submitted successfully!');
-        setFormSubmitted(true);
-        setError('');})
-      .catch((error) => {console.error('Error:', error);
-      setError('There was an error submitting the form.')});
-  };  
+    try {
+      const result = await sendEmail({
+        email, 
+        photo,
+        country,
+        costCentre,
+        expenseType,
+        reimbursementNeeded,
+        comment, 
+      });
+
+      console.log("Success:", result);
+      setSuccess("Form submitted successfully!");
+      setFormSubmitted(true);
+      setError("");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setError("There was an error submitting the form.");
+    }
+  };
 
   const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    console.log('Selected file:', file);
-    setPhoto(file);
+      const file = e.target.files[0];
+      console.log('Selected file:', file);
+      setPhoto(file);
   };
   
   const getCostCentres = () => {
