@@ -8,13 +8,16 @@ export default async function handler(req, res) {
 
     let recipients = [];
     if (country === 'Australia') {
-      recipients.push('accounts@au.dresden.vision');
+      //recipients.push('accounts@au.dresden.vision');      
+      recipients.push('myla@dresden.vision');
     } 
     if (country === 'Canada') {
-      recipients.push('accounts@ca.dresden.vision');
+      //recipients.push('accounts@ca.dresden.vision');
+      recipients.push('myla@dresden.vision');
     } 
     if (country === 'Canada and Australia') {
-      recipients.push('accounts@ca.dresden.vision', 'accounts@au.dresden.vision')
+      //recipients.push('accounts@ca.dresden.vision', 'accounts@au.dresden.vision')
+      recipients.push('myla@dresden.vision');
     }
     recipients.push(userEmail);
 
