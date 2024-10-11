@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     let recipients = [];
     if (country === 'Australia') {
       //recipients.push('accounts@au.dresden.vision');      
-      recipients.push('myla@dresden.vision');
+      recipients.push('dohaali@sabanciuniv.edu');
     } 
     if (country === 'Canada') {
       //recipients.push('accounts@ca.dresden.vision');
